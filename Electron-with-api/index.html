@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div>
+        <div class="container">
+            <form id="searchForm">
+                <div class="form-row align-items-center">
+                    <!-- <div class="col-sm-2 my-1">
+                        <input type="text" class="form-control" placeholder="Username" name="UserN">
+                    </div> -->
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="BetCode" name="BetCodeId">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="Status" name="BetStatus">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="Company Code" name="CompanyCode">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="Username" name="UserN">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="BetId" name="BetId">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="GameId" name="GameId">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="From Date" name="FromDate" id="fromDate">
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <input type="text" class="form-control" placeholder="To Date" name="ToDate" id="toDate">
+                    </div>
+                    <div class="col-12 my-1">
+                        <button type="submit" class="btn btn-primary float-right">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <table class="table table-bordered mt-5 table-hover" id="betTable">
+            <thead>
+                <th>#</th>
+                <th>Username</th>
+                <th>BetCode</th>
+                <th>Amount</th>
+                <th>Number</th>
+                <th>Status</th>
+                <th>IsWin</th>
+                <th>Company Name</th>
+                <th>Bet On</th>
+                <th>Result On</th>
+            </thead>
+            <tbody id="betsData">
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="14" class="footable-visible">
+                        <div class="text-right">
+                            <ul class="pagination" id="pagination"></ul>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <script>
+        let global = {
+            totalRows: 0,
+            pageSize: 15
+        }
+    </script>
+    <script src="index.js"></script>
+    <script src="pagination.js"></script>
+    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+
+    <script>
+        var fromDate = new Pikaday({
+            field: document.getElementById('fromDate'),
+            format: 'YYYY-MM-DD',
+            
+        });
+        var toDate = new Pikaday({
+            field: document.getElementById('toDate'),
+            format: 'YYYY-MM-DD',
+        });
+    </script>
+</body>
+
+</html>
