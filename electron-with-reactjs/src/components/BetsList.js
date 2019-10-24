@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import ReactPaginate from "react-paginate";
+import { connect } from "react-redux";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+
 const { ipcRenderer } = window.require("electron");
 const moment = require("moment");
 
@@ -7,9 +10,11 @@ class BetsList extends Component {
   constructor() {
     super();
     this.state = {
-      bets: []
+      bets: [],
+      pageNo: 1
     };
   }
+  rowsPerPage = 15;
   componentDidMount() {
     let _this = this;
     ipcRenderer.on("bets-data", function(event, response) {
@@ -17,13 +22,22 @@ class BetsList extends Component {
       let totalRows = response.totalRows;
       _this.setState({
         bets: bets,
-        pageCount: Math.ceil(totalRows / 15)
+        pageCount: Math.ceil(totalRows / _this.rowsPerPage)
       });
     });
+    document
+      .getElementById("betTable")
+      .addEventListener("click", function(evt) {
+        let target = evt.target;
+        if (target.tagName !== "TD") return;
+        let tr = target.closest("tr");
+        let betDetail = tr.dataset.betDetail;
+        ipcRenderer.send("open-bet-detail", betDetail);
+      });
   }
   showBetsList = () => {
+    let order = (+this.state.pageNo - 1) * this.rowsPerPage + 1;
     return this.state.bets.map((bet, index) => {
-      // let i = (+params.pageNo - 1) * params.rowsPerPage + 1;
       let betJSON = encodeURIComponent(JSON.stringify(bet));
       let stopOnClass =
         new Date() > new Date(bet.stopOn) ? "text-success" : "text-danger";
@@ -52,7 +66,7 @@ class BetsList extends Component {
       }
       return (
         <tr data-bet-detail={betJSON} key={index}>
-          <td>{index}</td>
+          <td>{order++}</td>
           <td>{bet.userN}</td>
           <td>{bet.betCodeId}</td>
           <td>{bet.betAmt}</td>
@@ -68,40 +82,56 @@ class BetsList extends Component {
       );
     });
   };
-  handlePageClick = (page) =>{
+  handlePageClick = page => {
     let pageNo = page.selected + 1;
+    this.setState({
+      pageNo: pageNo
+    });
     let params = {
-      pageNo
-    }
-    console.log(params);
+      pageNo,
+      ...this.props.params
+    };
     ipcRenderer.send("form-submit", params);
-  }
+  };
   render() {
     return (
-      <table className="table table-bordered mt-5 table-hover" id="betTable">
+      <table className="table table-bordered table-hover" id="betTable">
         <thead>
           <tr>
             <th>#</th>
             <th>Username</th>
-            <th>BetCode</th>
+            <th>Bet Code</th>
             <th>Amount</th>
             <th>Number</th>
             <th>Status</th>
-            <th>IsWin</th>
+            <th>Is Win</th>
             <th>Company Name</th>
             <th>Bet On</th>
             <th>Result On</th>
           </tr>
         </thead>
-        
-        <tbody id="betsData">{this.showBetsList()}</tbody>
+
+        <tbody id="betsData">
+          {this.showBetsList()}
+          {/* <tr>
+            <td>
+              <Link to="/bet-detail">
+                <button> Login </button>
+              </Link>
+            </td>
+          </tr> */}
+        </tbody>
         <tfoot>
           <tr>
             <td colSpan={14} className="footable-visible">
               <div className="text-center">
                 <ReactPaginate
-                  previousLabel={<i className='fa fa-chevron-left' aria-hidden='true'></i>}
-                  nextLabel={<i className='fa fa-chevron-right' aria-hidden='true'></i>}
+                  previousLabel={
+                    <i className="fa fa-chevron-left" aria-hidden="true"></i>
+                  }
+                  nextLabel={
+                    <i className="fa fa-chevron-right" aria-hidden="true"></i>
+                  }
                   breakLabel={"..."}
                   breakClassName={"break-me"}
                   pageCount={this.state.pageCount}
@@ -120,5 +150,10 @@ class BetsList extends Component {
     );
   }
 }
+let mapStateToProps = state => {
+  return {
+    params: state.searchFormReducer
+  };
+};
 
-export default BetsList;
+export default connect(mapStateToProps)(BetsList);

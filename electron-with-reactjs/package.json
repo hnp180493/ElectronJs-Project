@@ -1,28 +1,46 @@
 {
-  "name": "electron-with-reactjs",
+  "name": "electron-react",
   "version": "0.1.0",
-  "private": true,
-  "main": "electron/main.js",
+  "private": false,
+  "main": "electron-main.js",
+  "homepage": "./",
   "dependencies": {
     "axios": "^0.19.0",
-    "concurrently": "^5.0.0",
-    "cross-env": "^6.0.3",
-    "electron": "^6.0.12",
     "electron-is-dev": "^1.1.0",
     "moment": "^2.24.0",
     "pikaday": "^1.8.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-paginate": "^6.3.0",
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
-    "wait-on": "^3.3.0"
+    "redux": "^4.0.4"
+  },
+  "build": {
+    "productName": "Bet Report",
+    "appId": "scripter.BetReport",
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "Bet Report.exe"
+    },
+    "files": [
+      "./build/**/*",
+      "./src/**/*",
+      "./electron-main.js"
+    ],
+    "extends": null
   },
   "scripts": {
-    "start-react": "react-scripts start",
+    "start": "concurrently \"cross-env BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && electron .\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "concurrently \"cross-env BROWSER=none yarn start-react\" \"wait-on http://localhost:3000 && electron .\""
+    "dist": "yarn build && electron-builder"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,5 +56,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "cross-env": "^6.0.3",
+    "electron": "^6.0.12",
+    "electron-builder": "^21.2.0",
+    "wait-on": "^3.3.0"
   }
 }

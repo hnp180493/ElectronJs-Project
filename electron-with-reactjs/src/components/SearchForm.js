@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 const { ipcRenderer } = window.require("electron");
 let Pikaday = require("pikaday");
 
@@ -37,11 +38,12 @@ class SearchForm extends Component {
     });
     console.log(this.state);
   };
-  onSubmit = () =>{
-    let params = this.state;
-    console.log(params);
-    ipcRenderer.on("form-submit", params);
-  }
+  onSubmit = e => {
+    e.preventDefault();
+    let params = { ...this.state };
+    this.props.sendParams(params);
+    ipcRenderer.send("form-submit", params);
+  };
   render() {
     return (
       <div className="container">
@@ -133,4 +135,15 @@ class SearchForm extends Component {
   }
 }
 
-export default SearchForm;
+let mapDispatchToProps = dispatch => {
+  return {
+    sendParams: (params) => {
+      dispatch({type: "SEND_PARAMS_FORM", params})
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(SearchForm);
