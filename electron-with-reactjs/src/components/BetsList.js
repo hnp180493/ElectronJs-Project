@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ReactPaginate from "react-paginate";
 import { connect } from "react-redux";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 const { ipcRenderer } = window.require("electron");
 const moment = require("moment");
@@ -10,10 +9,10 @@ class BetsList extends Component {
   constructor() {
     super();
     this.state = {
-      bets: [],
-      pageNo: 1
+      bets: []
     };
   }
+  pageNo = 0;
   rowsPerPage = 15;
   componentDidMount() {
     let _this = this;
@@ -36,7 +35,8 @@ class BetsList extends Component {
       });
   }
   showBetsList = () => {
-    let order = (+this.state.pageNo - 1) * this.rowsPerPage + 1;
+    if (this.props.isReload) this.pageNo = 0;
+    let order = +this.pageNo * this.rowsPerPage + 1;
     return this.state.bets.map((bet, index) => {
       let betJSON = encodeURIComponent(JSON.stringify(bet));
       let stopOnClass =
@@ -83,17 +83,15 @@ class BetsList extends Component {
     });
   };
   handlePageClick = page => {
-    let pageNo = page.selected + 1;
-    this.setState({
-      pageNo: pageNo
-    });
-    let params = {
-      pageNo,
-      ...this.props.params
-    };
+    let pageNo = page.selected;
+    this.pageNo = pageNo;
+    let params = { ...this.props.params };
+    params.pageNo = pageNo + 1;
+    this.props.reloadPaging(false);
     ipcRenderer.send("form-submit", params);
   };
   render() {
+    console.log(this.props.isReload);
     return (
       <table className="table table-bordered table-hover" id="betTable">
         <thead>
@@ -111,16 +109,7 @@ class BetsList extends Component {
           </tr>
         </thead>
 
-        <tbody id="betsData">
-          {this.showBetsList()}
-          {/* <tr>
-            <td>
-              <Link to="/bet-detail">
-                <button> Login </button>
-              </Link>
-            </td>
-          </tr> */}
-        </tbody>
+        <tbody id="betsData">{this.showBetsList()}</tbody>
         <tfoot>
           <tr>
             <td colSpan={14} className="footable-visible">
@@ -141,6 +130,7 @@ class BetsList extends Component {
                   containerClassName={"pagination"}
                   subContainerClassName={"pages pagination"}
                   activeClassName={"active"}
+                  forcePage={this.props.isReload ? 0 : this.pageNo}
                 />
               </div>
             </td>
@@ -152,8 +142,19 @@ class BetsList extends Component {
 }
 let mapStateToProps = state => {
   return {
-    params: state.searchFormReducer
+    params: state.searchFormReducer.params,
+    isReload: state.searchFormReducer.isReload
+  };
+};
+let mapDistchToProps = dispatch => {
+  return {
+    reloadPaging: isReload => {
+      dispatch({ type: "RELOAD_PAGING", isReload });
+    }
   };
 };
 
-export default connect(mapStateToProps)(BetsList);
+export default connect(
+  mapStateToProps,
+  mapDistchToProps
+)(BetsList);

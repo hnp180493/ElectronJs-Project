@@ -36,12 +36,12 @@ class SearchForm extends Component {
     this.setState({
       [name]: value
     });
-    console.log(this.state);
   };
   onSubmit = e => {
     e.preventDefault();
     let params = { ...this.state };
     this.props.sendParams(params);
+    this.props.reloadPaging(true);
     ipcRenderer.send("form-submit", params);
   };
   render() {
@@ -139,6 +139,9 @@ let mapDispatchToProps = dispatch => {
   return {
     sendParams: (params) => {
       dispatch({type: "SEND_PARAMS_FORM", params})
+    },
+    reloadPaging: (isReload)=>{
+      dispatch({type: "RELOAD_PAGING", isReload})
     }
   };
 };

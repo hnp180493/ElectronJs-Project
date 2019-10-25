@@ -3,11 +3,6 @@ directories:
   buildResources: build
 productName: Bet Report
 appId: scripter.BetReport
-win:
-  target:
-    - portable
-portable:
-  artifactName: Bet Report.exe
 files:
   - filter:
       - ./build/**/*
