@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
 const { ipcRenderer, remote } = window.require("electron");
 
 class BetDetail extends Component {
@@ -12,9 +13,11 @@ class BetDetail extends Component {
     let _this = this;
     ipcRenderer.on("get-bet-detail", function(event, response) {
       let betDetail = JSON.parse(decodeURIComponent(response));
-      _this.setState({
-        betDetail: betDetail
-      });
+      _this.setState(
+        {
+          betDetail: betDetail
+        }
+      );
     });
   }
   closeBetDetail = () => {
@@ -24,7 +27,7 @@ class BetDetail extends Component {
   render() {
     let { betDetail } = this.state;
     console.log(betDetail);
-    
+
     return (
       <Fragment>
         <table className="table table-bordered table-hover" id="rpt-detail">
@@ -112,5 +115,4 @@ class BetDetail extends Component {
     );
   }
 }
-
 export default BetDetail;

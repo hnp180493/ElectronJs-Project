@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { showLoading } from "react-redux-loading-bar";
 const { ipcRenderer } = window.require("electron");
 let Pikaday = require("pikaday");
 
@@ -39,6 +40,7 @@ class SearchForm extends Component {
   };
   onSubmit = e => {
     e.preventDefault();
+    this.props.showLoading();
     let params = { ...this.state };
     this.props.sendParams(params);
     this.props.reloadPaging(true);
@@ -142,6 +144,9 @@ let mapDispatchToProps = dispatch => {
     },
     reloadPaging: (isReload)=>{
       dispatch({type: "RELOAD_PAGING", isReload})
+    },
+    showLoading: () => {
+      dispatch(showLoading());
     }
   };
 };

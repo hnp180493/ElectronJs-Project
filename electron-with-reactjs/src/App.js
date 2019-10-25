@@ -3,6 +3,7 @@ import SearchForm from "./components/SearchForm";
 import BetsList from "./components/BetsList";
 import BetDetail from "./components/BetDetail";
 import { HashRouter, Switch, Route } from "react-router-dom";
+import LoadingBar from "react-redux-loading-bar";
 
 function Bets() {
   return (
@@ -14,12 +15,16 @@ function Bets() {
 }
 function App() {
   return (
-    <HashRouter>
-      <Switch>
-        <Route exact path="/" component={Bets}/>
-        <Route path="/bet-detail" component={BetDetail}/>
-      </Switch>
-    </HashRouter>
+    <div>
+      <LoadingBar />
+
+      <HashRouter>
+        <Switch>
+          <Route exact path="/" component={Bets} />
+          <Route path="/bet-detail" component={BetDetail} />
+        </Switch>
+      </HashRouter>
+    </div>
   );
 }
 

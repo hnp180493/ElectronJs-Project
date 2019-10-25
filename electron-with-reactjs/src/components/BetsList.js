@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactPaginate from "react-paginate";
 import { connect } from "react-redux";
+import { showLoading, hideLoading } from "react-redux-loading-bar";
 
 const { ipcRenderer } = window.require("electron");
 const moment = require("moment");
@@ -16,24 +17,40 @@ class BetsList extends Component {
   rowsPerPage = 15;
   componentDidMount() {
     let _this = this;
+
     ipcRenderer.on("bets-data", function(event, response) {
       let bets = response.betItems;
       let totalRows = response.totalRows;
-      _this.setState({
-        bets: bets,
-        pageCount: Math.ceil(totalRows / _this.rowsPerPage)
-      });
+      _this.setState(
+        {
+          bets: bets,
+          pageCount: Math.ceil(totalRows / _this.rowsPerPage)
+        },
+        () => {
+          _this.props.hideLoading();
+        }
+      );
     });
     document
       .getElementById("betTable")
       .addEventListener("click", function(evt) {
         let target = evt.target;
         if (target.tagName !== "TD") return;
+
         let tr = target.closest("tr");
         let betDetail = tr.dataset.betDetail;
         ipcRenderer.send("open-bet-detail", betDetail);
       });
   }
+  handlePageClick = page => {
+    this.props.showLoading();
+    let pageNo = page.selected;
+    this.pageNo = pageNo;
+    let params = { ...this.props.params };
+    params.pageNo = pageNo + 1;
+    this.props.reloadPaging(false);
+    ipcRenderer.send("form-submit", params);
+  };
   showBetsList = () => {
     if (this.props.isReload) this.pageNo = 0;
     let order = +this.pageNo * this.rowsPerPage + 1;
@@ -82,16 +99,7 @@ class BetsList extends Component {
       );
     });
   };
-  handlePageClick = page => {
-    let pageNo = page.selected;
-    this.pageNo = pageNo;
-    let params = { ...this.props.params };
-    params.pageNo = pageNo + 1;
-    this.props.reloadPaging(false);
-    ipcRenderer.send("form-submit", params);
-  };
   render() {
-    console.log(this.props.isReload);
     return (
       <table className="table table-bordered table-hover" id="betTable">
         <thead>
@@ -108,7 +116,6 @@ class BetsList extends Component {
             <th>Result On</th>
           </tr>
         </thead>
-
         <tbody id="betsData">{this.showBetsList()}</tbody>
         <tfoot>
           <tr>
@@ -150,6 +157,12 @@ let mapDistchToProps = dispatch => {
   return {
     reloadPaging: isReload => {
       dispatch({ type: "RELOAD_PAGING", isReload });
+    },
+    showLoading: () => {
+      dispatch(showLoading());
+    },
+    hideLoading: () => {
+      dispatch(hideLoading());
     }
   };
 };

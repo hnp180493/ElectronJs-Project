@@ -21,9 +21,7 @@ ipcMain.on("open-bet-detail", function(event, betDetail) {
   if (!isDev) {
     url = url.replace(/\\/g, "/");
   }
-  // file:///C:/Users/admin/Desktop/js/ELECTRON/ElectronJs-Project/electron-with-reactjs/build/index.html#/bet-detail
 
-  console.log(url);
   betDetailWindow.loadURL(url);
   betDetailWindow.once("ready-to-show", function() {
     betDetailWindow.webContents.send("get-bet-detail", betDetail);

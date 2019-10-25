@@ -3,6 +3,7 @@ const isDev = require("electron-is-dev");
 const path = require("path");
 const glob = require("glob");
 const handleWindow = require("./src/electron/helper/window");
+const { sendBets} = require('./src/electron/sender');
 let mainWindow = null;
 function main() {
   mainWindow = new BrowserWindow({
@@ -14,12 +15,13 @@ function main() {
     }
   });
   let url = isDev ? "http:localhost:3000/" : `file://${path.join(__dirname, '/build/index.html')}`;
-  // let url = `file://${path.join(__dirname, '/build/index.html')}`
+
   mainWindow.loadURL(url);
 
-  mainWindow.once("ready-to-show", () => {
+  mainWindow.once("ready-to-show", async() => {
     handleWindow.setWindow(mainWindow);
     loadElectronFile();
+    await sendBets();
     mainWindow.show();
   });
 
@@ -36,21 +38,9 @@ app.on("window-all-closed", () => {
   if (process.platform !== 'darwin') app.quit()
 });
 
-// // On app activation (e.g. when clicking dock icon), re-create BrowserWindow if necessary
-// app.on(
-// 	"activate",
-// 	async () => {
-// 		if (!getWindow()) {
-// 			setWindow(await createWindow());
-// 		}
-// 	},
-// );
-
 function loadElectronFile() {
   const files = glob.sync(path.join(__dirname, "./src/electron/*.js"));
   files.forEach(file => {
-    if (!file.includes("main.js")) {
       require(file);
-    }
   });
 }

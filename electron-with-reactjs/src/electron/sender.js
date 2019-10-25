@@ -6,10 +6,6 @@ async function sendBets(params = {}) {
   handleWindow.getWindow().webContents.send("bets-data", bets);
 }
 
-(async () => {
-  sendBets();
-})();
-
 module.exports = {
   sendBets
 };
