@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
 const { ipcRenderer, remote } = window.require("electron");
 
 class BetDetail extends Component {

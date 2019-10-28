@@ -5,8 +5,8 @@ async function getBets(params = {}) {
   params.rowsPerPage = 15;
   let response = await axios({
     method: "post",
-    url: "http://api.betwin8.com/api/game/get-bet-infor",
-    // url: "http://192.168.0.9:7023/api/Game/get-bet-infor",
+    // url: "http://api.betwin8.com/api/game/get-bet-infor",
+    url: "http://192.168.0.9:7023/api/Game/get-bet-infor",
     headers: {
       "content-type": "application/json charset=utf-8",
       "x-api-key": "zXETppKnKk"

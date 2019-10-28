@@ -17,7 +17,7 @@ class SearchForm extends Component {
       format: "YYYY-MM-DD",
       onSelect: function(date) {
         _this.setState({
-          FromDate: date
+          FromDate: new Date(date.setHours(7))
         });
       }
     });
@@ -26,7 +26,7 @@ class SearchForm extends Component {
       format: "YYYY-MM-DD",
       onSelect: function(date) {
         _this.setState({
-          ToDate: date
+          ToDate: new Date(date.setHours(7))
         });
       }
     });
@@ -43,6 +43,7 @@ class SearchForm extends Component {
     this.props.showLoading();
     let params = { ...this.state };
     this.props.sendParams(params);
+    console.log(params);
     this.props.reloadPaging(true);
     ipcRenderer.send("form-submit", params);
   };
@@ -139,11 +140,11 @@ class SearchForm extends Component {
 
 let mapDispatchToProps = dispatch => {
   return {
-    sendParams: (params) => {
-      dispatch({type: "SEND_PARAMS_FORM", params})
+    sendParams: params => {
+      dispatch({ type: "SEND_PARAMS_FORM", params });
     },
-    reloadPaging: (isReload)=>{
-      dispatch({type: "RELOAD_PAGING", isReload})
+    reloadPaging: isReload => {
+      dispatch({ type: "RELOAD_PAGING", isReload });
     },
     showLoading: () => {
       dispatch(showLoading());
