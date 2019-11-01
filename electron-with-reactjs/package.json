@@ -21,6 +21,9 @@
   "build": {
     "productName": "Bet Report",
     "appId": "scripter.BetReport",
+    "win":{
+      "icon": "build/logo.ico"
+    },
     "files": [
       "./build/**/*",
       "./src/**/*",
