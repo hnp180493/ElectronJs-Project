@@ -15,13 +15,16 @@
     "react-redux": "^7.1.1",
     "react-redux-loading-bar": "^4.5.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^3.2.0",
     "redux": "^4.0.4"
   },
   "build": {
     "productName": "Bet Report",
     "appId": "scripter.BetReport",
-    "win":{
+    "win": {
+      "target": [
+        "zip"
+      ],
       "icon": "build/logo.ico"
     },
     "files": [

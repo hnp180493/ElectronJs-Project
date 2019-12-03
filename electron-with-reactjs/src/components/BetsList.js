@@ -56,8 +56,14 @@ class BetsList extends Component {
     let order = +this.pageNo * this.rowsPerPage + 1;
     return this.state.bets.map((bet, index) => {
       let betJSON = encodeURIComponent(JSON.stringify(bet));
-      let stopOnClass =
-        new Date() > new Date(bet.stopOn) ? "text-success" : "text-danger";
+      let stopOnClass = "text-danger";
+      if (new Date() > new Date(bet.stopOn)) {
+        if (bet.betStatus === "B") {
+          stopOnClass = "text-primary";
+        } else {
+          stopOnClass = "text-success";
+        }
+      }
       let statusClass = "";
       switch (bet.betStatus) {
         case "S":
@@ -75,8 +81,12 @@ class BetsList extends Component {
         default:
           break;
       }
-      let isWinClass = "text-muted";
+      let isWinClass = "text-primary";
       let textWin = "Not Yet";
+      if (bet.betStatus === "C") {
+        textWin = "Cancel";
+        isWinClass = "text-muted";
+      }
       if (bet.betStatus === "S") {
         isWinClass = bet.wlAmt > 0 ? "text-success" : "text-danger";
         textWin = bet.wlAmt > 0 ? "Yes" : "No";
@@ -116,7 +126,9 @@ class BetsList extends Component {
             <th>Result On</th>
           </tr>
         </thead>
+
         <tbody id="betsData">{this.showBetsList()}</tbody>
+
         <tfoot>
           <tr>
             <td colSpan={14} className="footable-visible">
@@ -167,7 +179,4 @@ let mapDistchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDistchToProps
-)(BetsList);
+export default connect(mapStateToProps, mapDistchToProps)(BetsList);
