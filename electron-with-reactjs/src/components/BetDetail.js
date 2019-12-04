@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 const { ipcRenderer, remote } = window.require("electron");
+const moment = require("moment");
 
 class BetDetail extends Component {
   constructor() {
@@ -25,8 +26,6 @@ class BetDetail extends Component {
   };
   render() {
     let { betDetail } = this.state;
-    console.log(betDetail);
-
     return (
       <Fragment>
         <table className="table table-bordered table-hover" id="rpt-detail">
@@ -89,19 +88,19 @@ class BetDetail extends Component {
             </tr>
             <tr>
               <td>Odds</td>
-              <td>{betDetail.odds}</td>
+              <td style={{color: 'blue'}}>{betDetail.odds}</td>
             </tr>
             <tr>
               <td>WinLoss Amount</td>
-              <td>{betDetail.wlAmt}</td>
+              <td style={{color: '#983333', fontWeight: 'bold'}}>{betDetail.wlAmt}</td>
             </tr>
             <tr>
               <td>Bet On</td>
-              <td>{betDetail.createdOn}</td>
+              <td>{moment(betDetail.createdOn).format("DD/MM/YYYY, hh:mm:ss A")}</td>
             </tr>
             <tr>
               <td>Result On</td>
-              <td>{betDetail.stopOn}</td>
+              <td>{moment(betDetail.stopOn).format("DD/MM/YYYY, hh:mm:ss A")}</td>
             </tr>
           </tbody>
         </table>

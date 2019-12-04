@@ -13,5 +13,6 @@ const handleWindow = require("./helper/window");
 globalShortcut.register("CommandOrControl+R", async function() {
   handleWindow.getWindow().reload();
   await sendBets();
+  
   handleWindow.getWindow().show();
 });

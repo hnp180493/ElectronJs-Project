@@ -43,7 +43,6 @@ class SearchForm extends Component {
     this.props.showLoading();
     let params = { ...this.state };
     this.props.sendParams(params);
-    console.log(params);
     this.props.reloadPaging(true);
     ipcRenderer.send("form-submit", params);
   };
@@ -57,7 +56,7 @@ class SearchForm extends Component {
                 type="text"
                 className="form-control"
                 placeholder="BetCode"
-                name="BetCodeId"
+                name="BetCode"
                 onChange={this.onChange}
               />
             </div>
@@ -91,6 +90,7 @@ class SearchForm extends Component {
             <div className="col-sm-3 my-1">
               <input
                 type="text"
+                pattern="[0-9]*"
                 className="form-control"
                 placeholder="BetId"
                 name="BetId"
@@ -100,6 +100,7 @@ class SearchForm extends Component {
             <div className="col-sm-3 my-1">
               <input
                 type="text"
+                pattern="[0-9]*"
                 className="form-control"
                 placeholder="GameId"
                 name="GameId"
